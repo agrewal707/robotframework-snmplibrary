@@ -24,13 +24,13 @@ def try_int(i):
 #   .iso.org.6.internet.2.1.1.1.0
 #   sysDescr.0
 def parse_oid(oid):
-    if not isinstance(oid, basestring):
+    if not isinstance(oid, str):
         return oid
     elif '::' in oid:
         mib, sym = oid.split('::', 1)
         oid = None
     elif oid.startswith('.'):
-        oid = map(try_int, oid[1:].split('.'))
+        oid = list(map(try_int, oid[1:].split('.')))
         oid = tuple(oid)
     else:
         mib = ''
@@ -40,7 +40,7 @@ def parse_oid(oid):
     if oid is None:
         sym, suffixes = sym.split('.', 1)
         suffixes = suffixes.split('.')
-        suffixes = map(try_int, suffixes)
+        suffixes = list(map(try_int, suffixes))
         suffixes = tuple(suffixes)
         oid = ((mib, sym),) + suffixes
 
@@ -54,11 +54,11 @@ def format_oid(oid):
 #  ('1', '2', '3') -> (1, 2, 3)
 #  1 -> (1,)
 def parse_idx(idx):
-    if isinstance(idx, basestring):
-        idx = map(int, idx.split('.'))
+    if isinstance(idx, str):
+        idx = list(map(int, idx.split('.')))
     elif isinstance(idx, int):
         idx = idx,
     else:
         # Assume interable list
-        idx = map(int, idx)
+        idx = list(map(int, idx))
     return tuple(idx)
